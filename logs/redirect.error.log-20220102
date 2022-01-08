@@ -1,0 +1,9 @@
+[Sun Dec 26 09:54:59.035295 2021] [core:error] [pid 23806] [client 146.0.75.206:54006] AH00126: Invalid URI in request GET default.asp HTTP/1.1
+[Sun Dec 26 18:23:26.477367 2021] [core:error] [pid 23373] [client 195.54.160.149:47990] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Mon Dec 27 15:28:49.305311 2021] [core:error] [pid 3539] [client 195.54.160.149:33860] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Tue Dec 28 12:13:38.142471 2021] [core:error] [pid 23096] [client 195.54.160.149:55818] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Wed Dec 29 08:29:35.325249 2021] [core:error] [pid 23539] [client 195.54.160.149:33342] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Thu Dec 30 05:37:32.935856 2021] [core:error] [pid 23806] [client 195.54.160.149:33926] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Fri Dec 31 02:12:10.346168 2021] [core:error] [pid 14019] [client 195.54.160.149:44430] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Fri Dec 31 22:41:40.492316 2021] [core:error] [pid 3421] [client 195.54.160.149:59570] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Sat Jan 01 18:54:29.928124 2022] [core:error] [pid 32066] [client 195.54.160.149:47038] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1

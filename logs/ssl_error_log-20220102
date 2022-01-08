@@ -1,0 +1,15 @@
+[Sun Dec 26 08:33:53.617911 2021] [core:error] [pid 27644] [client 195.54.160.149:52628] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Sun Dec 26 09:54:59.139361 2021] [core:error] [pid 27644] [client 146.0.75.206:40268] AH00126: Invalid URI in request GET default.asp HTTP/1.1
+[Mon Dec 27 05:07:34.539816 2021] [core:error] [pid 23981] [client 195.54.160.149:54102] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Mon Dec 27 16:53:05.263695 2021] [ssl:error] [pid 10430] [client 54.226.254.3:34842] AH02042: rejecting client initiated renegotiation
+[Tue Dec 28 02:10:51.106016 2021] [core:error] [pid 23539] [client 195.54.160.149:49800] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Tue Dec 28 22:45:46.185325 2021] [core:error] [pid 23096] [client 195.54.160.149:56536] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Wed Dec 29 06:08:08.471538 2021] [cgi:error] [pid 23097] [client 185.191.34.215:59798] script not found or unable to stat: /var/www/cgi-bin/menu_settings.php
+[Wed Dec 29 09:59:57.432860 2021] [cgi:error] [pid 23806] [client 185.191.34.215:33706] script not found or unable to stat: /var/www/cgi-bin/menu_settings.php
+[Wed Dec 29 19:59:18.212254 2021] [core:error] [pid 32631] [client 195.54.160.149:55776] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Thu Dec 30 04:47:36.837492 2021] [cgi:error] [pid 23806] [client 83.173.141.241:46991] script not found or unable to stat: /var/www/cgi-bin/php
+[Thu Dec 30 04:47:37.503906 2021] [cgi:error] [pid 14021] [client 83.173.141.241:47271] script not found or unable to stat: /var/www/cgi-bin/php5
+[Thu Dec 30 16:44:15.371902 2021] [core:error] [pid 22645] [client 195.54.160.149:33914] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Fri Dec 31 12:50:20.219016 2021] [core:error] [pid 23806] [client 195.54.160.149:42144] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Sat Jan 01 09:44:25.159382 2022] [core:error] [pid 3419] [client 195.54.160.149:50578] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Sat Jan 01 13:52:46.856025 2022] [cgi:error] [pid 7329] [client 128.1.248.26:45972] script not found or unable to stat: /var/www/cgi-bin/config.exp

@@ -1,11 +1,13 @@
-[Sun Dec 19 13:32:14.777297 2021] [core:error] [pid 10591] [client 195.54.160.149:58768] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
-[Mon Dec 20 09:29:11.001997 2021] [core:error] [pid 10591] [client 195.54.160.149:53402] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
-[Tue Dec 21 05:18:35.018829 2021] [core:error] [pid 10360] [client 195.54.160.149:32880] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
-[Tue Dec 21 18:35:48.977865 2021] [cgi:error] [pid 10591] [client 136.52.89.96:53219] script not found or unable to stat: /var/www/cgi-bin/mt
-[Wed Dec 22 02:31:44.520324 2021] [core:error] [pid 15815] [client 195.54.160.149:58010] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
-[Wed Dec 22 07:09:23.323376 2021] [ssl:error] [pid 15815] [client 107.22.123.240:47278] AH02042: rejecting client initiated renegotiation
-[Wed Dec 22 22:33:44.309833 2021] [core:error] [pid 11116] [client 195.54.160.149:50512] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
-[Thu Dec 23 13:01:58.592145 2021] [core:error] [pid 11116] [client 193.118.53.194:45268] AH00126: Invalid URI in request HEAD /icons/.%2e/%2e%2e/apache2/icons/sphere1.png HTTP/1.1
-[Thu Dec 23 19:04:26.478474 2021] [core:error] [pid 8814] [client 195.54.160.149:55274] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
-[Fri Dec 24 15:46:24.480450 2021] [core:error] [pid 6616] [client 195.54.160.149:43958] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
-[Sat Dec 25 12:15:14.834210 2021] [core:error] [pid 15442] [client 195.54.160.149:38040] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Sun Jan 02 11:19:47.719580 2022] [core:error] [pid 20144] [client 161.35.188.242:38168] AH00126: Invalid URI in request GET /cgi-bin/.%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/etc/hosts HTTP/1.1
+[Mon Jan 03 02:55:47.348387 2022] [core:error] [pid 20144] [client 195.54.160.149:36810] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Tue Jan 04 00:54:59.218589 2022] [core:error] [pid 20144] [client 45.146.165.37:47436] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Wed Jan 05 12:48:13.342423 2022] [core:error] [pid 15425] [client 45.146.165.37:36416] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Thu Jan 06 03:19:53.124382 2022] [cgi:error] [pid 15426] [client 66.249.66.88:63837] script not found or unable to stat: /var/www/cgi-bin/mt
+[Thu Jan 06 08:16:24.063767 2022] [cgi:error] [pid 15426] [client 66.249.66.134:63712] script not found or unable to stat: /var/www/cgi-bin/mt
+[Thu Jan 06 21:31:40.064415 2022] [core:error] [pid 27220] [client 193.118.53.202:53428] AH00126: Invalid URI in request HEAD /icons/.%2e/%2e%2e/apache2/icons/sphere1.png HTTP/1.1
+[Fri Jan 07 02:27:34.597865 2022] [core:error] [pid 15910] [client 109.74.204.123:45748] AH00126: Invalid URI in request GET default.asp HTTP/1.1
+[Fri Jan 07 04:03:50.295714 2022] [core:error] [pid 15921] [client 45.146.165.37:57748] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Fri Jan 07 20:44:37.142762 2022] [cgi:error] [pid 882] [client 66.249.66.18:54343] script not found or unable to stat: /var/www/cgi-bin/mt
+[Fri Jan 07 22:57:50.353163 2022] [core:error] [pid 15920] [client 45.146.165.37:48074] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Sat Jan 08 06:43:17.168319 2022] [cgi:error] [pid 15058] [client 66.249.66.16:55173] script not found or unable to stat: /var/www/cgi-bin/mt
+[Sat Jan 08 18:17:46.326666 2022] [core:error] [pid 15058] [client 45.146.165.37:42898] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
