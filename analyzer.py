@@ -38,8 +38,7 @@ if conn is not None:
 					apachelog_line INTEGER,
 					geoip_city VARCHAR,
 					geoip_country VARCHAR,
-					geoip_subdivision_1 VARCHAR,
-					geoip_subdivision_2 VARCHAR
+					geoip_full VARCHAR
                     ); """)
 
 	cur.execute("""CREATE UNIQUE INDEX IF NOT EXISTS log_entries_idx_unique on log_entries(apachelog_request_time_unix,apachelog_line,apachelog_remote_host,COALESCE(apachelog_request_line,''))""")
@@ -48,17 +47,24 @@ if conn is not None:
 	cur.execute("""CREATE INDEX IF NOT EXISTS log_entries_idx_remote_host ON
 					log_entries(apachelog_remote_host);""")
 
-	cur.execute("""CREATE INDEX IF NOT EXISTS log_entries_idx_geoip ON
-					log_entries(geoip_country,geoip_subdivision_1,geoip_subdivision_2,geoip_city);""")
+	cur.execute("""CREATE INDEX IF NOT EXISTS log_entries_idx_geoip_full ON
+					log_entries(geoip_full);""")
+
+	cur.execute("""CREATE INDEX IF NOT EXISTS log_entries_idx_geoip_country_city ON
+					log_entries(geoip_country, geoip_city);""")
 
 def do_geoip( remote_host ):
 	if remote_host in geoip_cache:
 		return geoip_cache[remote_host]
 	else:
-		location = (None,None)
+		location = (None,None,None)
 		try:
 			lookup = reader.city(remote_host)
-			location = ( str(lookup.country.name), str(lookup.city.name) )
+			full = [ str(lookup.country.name) ]
+			for subdivision in lookup.subdivisions:
+				full.append( str(subdivision.name) )
+			full.append( str(lookup.city.name) )
+			location = ( str(lookup.country.name), str(lookup.city.name), '/'.join(full) )
 			geoip_cache[remote_host] = location
 			return location
 		except geoip2.errors.AddressNotFoundError:
@@ -96,7 +102,7 @@ def autoparse( filename ):
 						entry["apachelog_headers_useragent"] = entry["apachelog_headers_in"]["User-Agent"]
 						del entry["apachelog_headers_in"]
 
-					(entry['geoip_country'], entry['geoip_city'] ) = do_geoip( entry["apachelog_remote_host"] )
+					(entry['geoip_country'], entry['geoip_city'], entry['geoip_full'] ) = do_geoip( entry["apachelog_remote_host"] )
 
 					q = "INSERT INTO log_entries"
 					q += " (" + ",".join(entry.keys()) + ")"
