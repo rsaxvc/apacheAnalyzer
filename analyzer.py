@@ -4,7 +4,7 @@ import argparse
 from timeit import default_timer as timer
 import traceback
 import os
-import sys
+import datetime
 import sqlite3
 
 parser = argparse.ArgumentParser(description='Parse apache log files.')
@@ -34,6 +34,7 @@ if conn is not None:
 					apachelog_remote_user VARCHAR,
 					apachelog_request_line VARCHAR,
 					apachelog_request_time VARCHAR,
+					apachelog_request_time_unix INTEGER,
 					apachelog_line INTEGER,
 					geoip_city VARCHAR,
 					geoip_country VARCHAR,
@@ -88,6 +89,7 @@ def autoparse( filename ):
 						del entry["apachelog_request_time_fields"]
 
 					if "apachelog_request_time" in entry:
+						entry["apachelog_request_time_unix"] = datetime.datetime.timestamp(entry["apachelog_request_time"])
 						entry["apachelog_request_time"] = entry["apachelog_request_time"].isoformat()
 						
 					if "apachelog_headers_in" in entry:
