@@ -42,7 +42,7 @@ if conn is not None:
 					geoip_subdivision_2 VARCHAR
                     ); """)
 
-	cur.execute("""CREATE UNIQUE INDEX IF NOT EXISTS log_entries_idx_unique on log_entries(apachelog_line,apachelog_remote_host,COALESCE(apachelog_request_line,''))""")
+	cur.execute("""CREATE UNIQUE INDEX IF NOT EXISTS log_entries_idx_unique on log_entries(apachelog_request_time_unix,apachelog_line,apachelog_remote_host,COALESCE(apachelog_request_line,''))""")
 
 
 	cur.execute("""CREATE INDEX IF NOT EXISTS log_entries_idx_remote_host ON
