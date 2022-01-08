@@ -1,0 +1,10 @@
+[Sun Nov 28 16:07:22.985057 2021] [cgi:error] [pid 11437] [client 66.249.79.20:47591] script not found or unable to stat: /var/www/cgi-bin/mt
+[Mon Nov 29 06:06:06.601251 2021] [core:error] [pid 12383] [client 45.146.164.110:33846] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Mon Nov 29 14:13:23.056555 2021] [cgi:error] [pid 13319] [client 45.146.164.160:36408] script not found or unable to stat: /var/www/cgi-bin/jarrewrite.sh
+[Tue Nov 30 16:48:27.639086 2021] [cgi:error] [pid 13317] [client 66.249.76.178:47009] script not found or unable to stat: /var/www/cgi-bin/mt
+[Tue Nov 30 17:52:25.489948 2021] [core:error] [pid 13321] [client 45.146.164.110:60046] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Thu Dec 02 08:39:50.306625 2021] [cgi:error] [pid 13320] [client 144.76.186.38:10760] script not found or unable to stat: /var/www/cgi-bin/mt
+[Thu Dec 02 08:39:55.113397 2021] [cgi:error] [pid 13320] [client 144.76.186.38:10760] script not found or unable to stat: /var/www/cgi-bin/mt
+[Thu Dec 02 09:04:49.470157 2021] [core:error] [pid 13321] [client 45.146.164.110:48796] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Fri Dec 03 04:14:20.341954 2021] [core:error] [pid 31104] [client 45.146.164.110:43486] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Sat Dec 04 03:42:48.049806 2021] [cgi:error] [pid 11889] [client 193.118.53.194:34366] script not found or unable to stat: /var/www/cgi-bin/config.exp

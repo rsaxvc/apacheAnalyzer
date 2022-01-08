@@ -1,0 +1,14 @@
+[Sun Dec 05 07:36:04.408059 2021] [core:error] [pid 27659] [client 84.17.48.84:35312] AH00126: Invalid URI in request POST /cgi-bin/.%2E/%2E%2E/%2E%2E/%2E%2E/%2E%2E/bin/bash HTTP/1.1
+[Sun Dec 05 21:02:45.756707 2021] [core:error] [pid 27691] [client 45.155.205.233:46166] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Mon Dec 06 16:13:39.025137 2021] [core:error] [pid 27659] [client 45.155.205.233:37584] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Tue Dec 07 10:55:50.016534 2021] [core:error] [pid 28057] [client 45.155.205.233:49266] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Wed Dec 08 06:43:25.549839 2021] [core:error] [pid 14037] [client 45.155.205.233:35180] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Wed Dec 08 14:57:50.306216 2021] [core:error] [pid 27773] [client 167.99.133.28:55396] AH00126: Invalid URI in request GET /cgi-bin/.%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/etc/hosts HTTP/1.1
+[Thu Dec 09 01:31:45.973137 2021] [core:error] [pid 14034] [client 45.155.205.233:46904] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Thu Dec 09 09:17:06.564282 2021] [core:error] [pid 8339] [client 128.1.248.26:45394] AH00126: Invalid URI in request HEAD /icons/.%2e/%2e%2e/apache2/icons/sphere1.png HTTP/1.1
+[Thu Dec 09 20:56:16.316598 2021] [core:error] [pid 14037] [client 45.155.205.233:52458] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Fri Dec 10 19:48:40.750110 2021] [ssl:error] [pid 15286] [client 219.240.212.67:14552] AH02039: Certificate Verification: Error (18): self signed certificate
+[Fri Dec 10 19:48:41.542132 2021] [ssl:error] [pid 7612] [client 219.240.212.67:14555] AH02039: Certificate Verification: Error (18): self signed certificate
+[Fri Dec 10 19:48:43.448472 2021] [ssl:error] [pid 13064] [client 219.240.212.67:14557] AH02039: Certificate Verification: Error (18): self signed certificate
+[Fri Dec 10 19:48:44.249814 2021] [ssl:error] [pid 14037] [client 219.240.212.67:14559] AH02039: Certificate Verification: Error (18): self signed certificate
+[Sat Dec 11 03:24:02.085795 2021] [core:error] [pid 830] [client 45.155.205.233:54486] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1

@@ -1,0 +1,18 @@
+[Sun Nov 21 02:08:19.801750 2021] [core:error] [pid 26203] [client 45.146.164.110:44868] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Sun Nov 21 21:36:33.968214 2021] [core:error] [pid 30385] [client 45.146.164.110:45998] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Mon Nov 22 17:30:53.384682 2021] [core:error] [pid 7595] [client 45.146.164.110:33826] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Mon Nov 22 22:30:07.844998 2021] [cgi:error] [pid 7594] [client 66.249.66.134:49545] script not found or unable to stat: /var/www/cgi-bin/mt
+[Tue Nov 23 00:57:30.101228 2021] [cgi:error] [pid 7595] [client 66.249.66.88:61123] script not found or unable to stat: /var/www/cgi-bin/mt
+[Tue Nov 23 05:17:37.093276 2021] [ssl:error] [pid 26203] [client 54.156.51.204:45588] AH02042: rejecting client initiated renegotiation
+[Tue Nov 23 13:02:41.866123 2021] [core:error] [pid 3502] [client 45.146.164.110:45384] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Wed Nov 24 01:06:50.712838 2021] [cgi:error] [pid 3500] [client 136.144.41.198:64278] script not found or unable to stat: /var/www/cgi-bin/mt, referer: yahoo.com
+[Wed Nov 24 01:06:56.092545 2021] [cgi:error] [pid 3500] [client 136.144.41.198:64586] script not found or unable to stat: /var/www/cgi-bin/mt-atom.cgi, referer: yahoo.com
+[Wed Nov 24 01:07:02.282243 2021] [cgi:error] [pid 3500] [client 136.144.41.198:64982] script not found or unable to stat: /var/www/cgi-bin/MT, referer: yahoo.com
+[Wed Nov 24 01:13:55.162377 2021] [cgi:error] [pid 7595] [client 136.144.41.198:58407] script not found or unable to stat: /var/www/cgi-bin/mt, referer: yahoo.com
+[Wed Nov 24 01:14:00.222348 2021] [cgi:error] [pid 7595] [client 136.144.41.198:58858] script not found or unable to stat: /var/www/cgi-bin/mt-atom.cgi, referer: yahoo.com
+[Wed Nov 24 01:14:12.019688 2021] [cgi:error] [pid 7595] [client 136.144.41.198:59787] script not found or unable to stat: /var/www/cgi-bin/MT, referer: yahoo.com
+[Thu Nov 25 05:09:48.914925 2021] [core:error] [pid 28004] [client 45.146.164.110:39236] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Thu Nov 25 10:31:53.790244 2021] [core:error] [pid 27549] [client 162.221.192.26:36196] AH00126: Invalid URI in request HEAD /icons/.%2e/%2e%2e/apache2/icons/sphere1.png HTTP/1.1
+[Fri Nov 26 00:34:37.658767 2021] [core:error] [pid 11433] [client 45.146.164.110:52828] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Fri Nov 26 10:14:19.592913 2021] [ssl:error] [pid 27553] [client 34.239.111.151:35164] AH02042: rejecting client initiated renegotiation
+[Sat Nov 27 14:58:35.627658 2021] [core:error] [pid 15992] [client 45.146.164.110:60158] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1

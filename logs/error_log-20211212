@@ -1,0 +1,5 @@
+[Sun Dec 05 01:57:01.946335 2021] [auth_digest:notice] [pid 391] AH01757: generating secret for digest authentication ...
+[Sun Dec 05 01:57:01.946996 2021] [lbmethod_heartbeat:notice] [pid 391] AH02282: No slotmem from mod_heartmonitor
+[Sun Dec 05 01:57:01.947875 2021] [mpm_prefork:notice] [pid 391] AH00163: Apache/2.4.6 (CentOS) OpenSSL/1.0.2k-fips configured -- resuming normal operations
+[Sun Dec 05 01:57:01.947882 2021] [core:notice] [pid 391] AH00094: Command line: '/usr/sbin/httpd -D FOREGROUND'
+[Sun Dec 12 01:57:02.081891 2021] [mpm_prefork:notice] [pid 391] AH00171: Graceful restart requested, doing restart
