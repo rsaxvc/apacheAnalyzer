@@ -1,7 +1,7 @@
 import argparse
 from timeit import default_timer as timer
 from pypika import functions as fn
-from pypika import Query, Table, Field
+from pypika import Query, Table, Field, Order
 import pypika
 import sqlite3
 
@@ -36,6 +36,8 @@ q = q.groupby(logs.apachelog_remote_host) \
 
 if args.minRequestsPerHost != None:
 	q = q.having(fn.Count(logs.apachelog_remote_host) >= args.minRequestsPerHost )
+
+q = q.orderby('RequestsPerHost', order=Order.desc)
 
 if args.maxHosts != None:
 	q = q.limit( args.maxHosts )
