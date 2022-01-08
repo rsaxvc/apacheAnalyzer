@@ -16,9 +16,9 @@ except:
 reader = geoip2.database.Reader('GeoLite2-City.mmdb')
 geoip_cache = dict()
 conn = sqlite3.connect("logdb.db")
-c = conn.cursor()
+cur = conn.cursor()
 if conn is not None:
-    c.execute(""" CREATE TABLE IF NOT EXISTS log_entries (
+	cur.execute(""" CREATE TABLE IF NOT EXISTS log_entries (
 					apachelog_bytes_sent INTEGER,
 					apachelog_final_status INTEGER,
 					apachelog_headers_referer VARCHAR,
@@ -32,9 +32,17 @@ if conn is not None:
 					geoip_city VARCHAR,
 					geoip_country VARCHAR,
 					geoip_subdivision_1 VARCHAR,
-					geoip_subdivision_2 VARCHAR,
-					UNIQUE(apachelog_line,apachelog_remote_host,apachelog_request_line)
+					geoip_subdivision_2 VARCHAR
                     ); """)
+
+	cur.execute("""CREATE UNIQUE INDEX IF NOT EXISTS log_entries_idx_unique on log_entries(apachelog_line,apachelog_remote_host,COALESCE(apachelog_request_line,''))""")
+
+
+	cur.execute("""CREATE INDEX IF NOT EXISTS log_entries_idx_remote_host ON
+					log_entries(apachelog_remote_host);""")
+
+	cur.execute("""CREATE INDEX IF NOT EXISTS log_entries_idx_geoip ON
+					log_entries(geoip_country,geoip_subdivision_1,geoip_subdivision_2,geoip_city);""")
 
 def do_geoip( remote_host ):
 	location = (None,None,None,None)
@@ -89,16 +97,26 @@ def autoparse( filename ):
 					q += " ON CONFLICT DO NOTHING"
 					v = entry.values()
 					#print(q,"<=",v)
-					c.execute(q, list(v))
+					cur.execute(q, list(v))
 				return line_no
 			except apachelogs.errors.InvalidEntryError:
 				continue
 		return 0
 	
-start = timer()
+starting_log_entries = cur.execute("SELECT COUNT(*) FROM log_entries").fetchone()[0]
+
 count = 0
+start = timer()
 for filename in os.scandir('logs'):
 	count += autoparse( filename )
 end = timer()
-print("Processed:", count, "records in", str(end-start), "seconds")
+
+ending_log_entries = cur.execute("SELECT COUNT(*) FROM log_entries").fetchone()[0]
+added_count = ending_log_entries - starting_log_entries
+
+dur = end-start
+print("Took:", str(dur), "seconds" )
+print("Parsed:", count, "records(" + str(count/dur) + "/second)" )
+print("Ingressed:", added_count, "records(", str(added_count/dur), "/second)")
+
 conn.commit()
