@@ -52,17 +52,16 @@ if conn is not None:
 					log_entries(geoip_country,geoip_subdivision_1,geoip_subdivision_2,geoip_city);""")
 
 def do_geoip( remote_host ):
-	location = (None,None,None,None)
 	if remote_host in geoip_cache:
 		return geoip_cache[remote_host]
 	else:
+		location = (None,None)
 		try:
 			lookup = reader.city(remote_host)
-			location = ( str(lookup.country.name), str(lookup.subdivision_1.name), str(lookup.subdivision_2.name), str(lookup.city.name) )
+			location = ( str(lookup.country.name), str(lookup.city.name) )
 			geoip_cache[remote_host] = location
 			return location
-		except:
-			location = (None,None,None,None)
+		except geoip2.errors.AddressNotFoundError:
 			geoip_cache[remote_host] = location
 			return location
 
@@ -97,7 +96,7 @@ def autoparse( filename ):
 						entry["apachelog_headers_useragent"] = entry["apachelog_headers_in"]["User-Agent"]
 						del entry["apachelog_headers_in"]
 
-					(entry['geoip_country'], entry['geoip_subdivision_1'], entry['geoip_subdivision_2'], entry['geoip_city'] ) = do_geoip( entry["apachelog_remote_host"] )
+					(entry['geoip_country'], entry['geoip_city'] ) = do_geoip( entry["apachelog_remote_host"] )
 
 					q = "INSERT INTO log_entries"
 					q += " (" + ",".join(entry.keys()) + ")"
