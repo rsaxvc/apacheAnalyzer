@@ -1,10 +1,16 @@
 from apachelogs import LogParser
 import apachelogs
+import argparse
 from timeit import default_timer as timer
 import traceback
 import os
 import sys
 import sqlite3
+
+parser = argparse.ArgumentParser(description='Parse apache log files.')
+parser.add_argument('log_paths', type=str, nargs='+',
+                    help='path to files or directories')
+args = parser.parse_args()
 
 has_geoip = False
 try:
@@ -107,8 +113,14 @@ starting_log_entries = cur.execute("SELECT COUNT(*) FROM log_entries").fetchone(
 
 count = 0
 start = timer()
-for filename in os.scandir('logs'):
-	count += autoparse( filename )
+for path in args.log_paths:
+	if os.path.isdir(path):  
+		for filename in os.scandir(path):
+			count += autoparse( filename )
+	elif os.path.isfile(path):  
+		count += autoparse( path )
+	else:
+		print("abnormal path:"+path)
 end = timer()
 
 ending_log_entries = cur.execute("SELECT COUNT(*) FROM log_entries").fetchone()[0]
