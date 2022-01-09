@@ -1,22 +1,40 @@
-import argparse
+import os
+import pypika
+import sqlite3
+import sys
+
+sys.stdout.reconfigure(encoding='utf-8')
+
 from timeit import default_timer as timer
 from pypika import functions as fn
 from pypika import Query, Table, Field, Order
-import pypika
-import sqlite3
 
-parser = argparse.ArgumentParser(description='Query logs by client.')
-parser.add_argument('--startTime', type=int, help='UTC UNIX seconds')
-parser.add_argument('--stopTime', type=int, help='UTC UNIX seconds')
-parser.add_argument('--minRequestsPerHost', type=int, help='hide hosts with fewer requests', default=20 )
-parser.add_argument('--maxHosts', type=int, help='Fetch only top N hosts by request count', default=10 )
-parser.add_argument('--outputFmt',
-                    default='python',
-                    const='python',
-                    nargs='?',
-                    choices=['python','json', 'csv', 'all'],
-                    help='output format(default: %(default)s)')
-args = parser.parse_args()
+if 'REQUEST_METHOD' in os.environ:
+	import cgi
+	args = cgi.FieldStorage()
+	if "outputFmt" not in args:
+		args["outputFmt"] = "html"
+	if( args["outputFmt"] == "html" ):
+		print( "Content-type: text/html\n\n" )
+	elif( args["outputFmt"] == "json" ):
+		print( "Content-type: application/json\n\n" )
+	else:
+		print( "Content-type: text/plain\n\n" )
+	print()
+else:
+	import argparse
+	parser = argparse.ArgumentParser(description='Query logs by client.')
+	parser.add_argument('--startTime', type=int, help='UTC UNIX seconds')
+	parser.add_argument('--stopTime', type=int, help='UTC UNIX seconds')
+	parser.add_argument('--minRequestsPerHost', type=int, help='hide hosts with fewer requests', default=20 )
+	parser.add_argument('--maxHosts', type=int, help='Fetch only top N hosts by request count', default=10 )
+	parser.add_argument('--outputFmt',
+						default='python',
+						const='python',
+						nargs='?',
+						choices=['python','json', 'csv', 'html', 'all'],
+						help='output format(default: %(default)s)')
+	args = vars(parser.parse_args())
 
 conn = sqlite3.connect("logdb.db")
 cur = conn.cursor()
@@ -25,32 +43,41 @@ cur.execute('pragma query_only = ON')
 logs = Table('log_entries')
 q = Query.from_(logs)
 
-if args.startTime != None:
-	q = q.where(logs.apachelog_request_time_unix >= args.startTime)
+def present( args, key ):
+	return key in args and args[key] != None
+
+if present( args, "startTime"):
+	q = q.where(logs.apachelog_request_time_unix >= args["startTime"])
 	
-if args.stopTime != None:
-	q = q.where(logs.apachelog_request_time_unix < args.stopTime)
+if present( args, "stopTime"):
+	q = q.where(logs.apachelog_request_time_unix < args["stopTime"])
 
 q = q.groupby(logs.apachelog_remote_host) \
 	.select(logs.apachelog_remote_host, fn.Count(logs.apachelog_remote_host).as_('RequestsPerHost') )
 
-if args.minRequestsPerHost != None:
-	q = q.having(fn.Count(logs.apachelog_remote_host) >= args.minRequestsPerHost )
+if present( args, "minRequestsPerHost"):
+	q = q.having(fn.Count(logs["apachelog_remote_host"]) >= args["minRequestsPerHost"] )
 
 q = q.orderby('RequestsPerHost', order=Order.desc)
 
-if args.maxHosts != None:
-	q = q.limit( args.maxHosts )
-
-print(q)
+if present( args, "maxHosts"):
+	q = q.limit( args["maxHosts"] )
 
 rslt = cur.execute(str(q)).fetchall()
-if args.outputFmt == 'python' or args.outputFmt == 'all':
+if args["outputFmt"] == 'python' or args["outputFmt"] == 'all':
 	print(rslt)
-if args.outputFmt == 'json' or args.outputFmt == 'all':
+if args["outputFmt"] == 'json' or args["outputFmt"] == 'all':
 	import json
 	print(json.dumps({k:v for k,v in rslt}))
-if args.outputFmt == 'csv' or args.outputFmt == 'all':
+if args["outputFmt"] == 'csv' or args["outputFmt"] == 'all':
 	print('client,count')
-	for row in rslt:
-		print( str(row[0]) + ',' + str(row[1]) )
+	for tup in rslt:
+		print( ",".join( [str(t) for t in tup] ) )
+if args["outputFmt"] == 'html' or args["outputFmt"] == 'all':
+	print( "<html><head><title>Top Hosts</title></head><body>" )
+	print( "<table border=\"1\">" )
+	print( "	<tr><th>RemoteHost</th><th>Count</th></tr>")
+	for tup in rslt:
+		print("	<tr><td>"+str(tup[0]) + "</td><td>"+ str(tup[1])+"</td></tr>")
+	print( "</table>" )
+	print( "</body></html>" )
