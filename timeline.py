@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import os
 from pypika import functions as fn
 from pypika import Query, Table, Field
@@ -5,11 +6,9 @@ import pypika
 import sqlite3
 import sys
 
-sys.stdout.reconfigure(encoding='utf-8')
-
 if 'REQUEST_METHOD' in os.environ:
 	import cgi
-	args = cgi.FieldStorage()
+	args = dict(cgi.FieldStorage())
 	if "outputFmt" not in args:
 		args["outputFmt"] = "html"
 	if( args["outputFmt"] == "html" ):
@@ -51,7 +50,7 @@ if present( args, "stopTime"):
 	q = q.where(logs.apachelog_request_time_unix < args["stopTime"])
 
 if not present( args, "chunkSeconds" ):
-	chunkSeconds = 60*60
+	args["chunkSeconds"] = 60*60
 
 q = q.groupby(logs.apachelog_request_time_unix/args["chunkSeconds"])
 q = q.select(fn.Cast(logs.apachelog_request_time_unix - logs.apachelog_request_time_unix % args["chunkSeconds"], 'INTEGER'), fn.Count(logs.apachelog_request_time_unix))

@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 from apachelogs import LogParser
 import apachelogs
 import argparse
@@ -41,7 +42,7 @@ if conn is not None:
 					geoip_full VARCHAR
                     ); """)
 
-	cur.execute("""CREATE UNIQUE INDEX IF NOT EXISTS log_entries_idx_unique on log_entries(apachelog_request_time_unix,apachelog_line,apachelog_remote_host,COALESCE(apachelog_request_line,''))""")
+	cur.execute("""CREATE UNIQUE INDEX IF NOT EXISTS log_entries_idx_unique ON log_entries(apachelog_request_time_unix,apachelog_line,apachelog_remote_host,COALESCE(apachelog_request_line,''))""")
 
 	cur.execute("""CREATE INDEX IF NOT EXISTS log_entries_idx_remote_host ON
 					log_entries(apachelog_remote_host);""")

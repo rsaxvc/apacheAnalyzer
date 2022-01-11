@@ -1,9 +1,8 @@
+#!/usr/bin/python3
 import os
 import pypika
 import sqlite3
 import sys
-
-sys.stdout.reconfigure(encoding='utf-8')
 
 from timeit import default_timer as timer
 from pypika import functions as fn
@@ -11,7 +10,8 @@ from pypika import Query, Table, Field, Order
 
 if 'REQUEST_METHOD' in os.environ:
 	import cgi
-	args = cgi.FieldStorage()
+	import cgitb
+	args = dict(cgi.FieldStorage())
 	if "outputFmt" not in args:
 		args["outputFmt"] = "html"
 	if( args["outputFmt"] == "html" ):
@@ -21,6 +21,7 @@ if 'REQUEST_METHOD' in os.environ:
 	else:
 		print( "Content-type: text/plain\n\n" )
 	print()
+	cgitb.enable()
 else:
 	import argparse
 	parser = argparse.ArgumentParser(description='Query logs by client.')

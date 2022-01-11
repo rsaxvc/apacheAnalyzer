@@ -7,15 +7,10 @@ import sqlite3
 import sys
 from timeit import default_timer as timer
 
-sys.stdout.reconfigure(encoding='utf-8')
-
 if 'REQUEST_METHOD' in os.environ:
 	import cgi
 	import cgitb
-
-	args = dict(cgi.FieldStorage())
-	if "maxLogs" not in args:
-		args["maxLogs"] = 100
+	args =dict( cgi.FieldStorage())
 	if "outputFmt" not in args:
 		args["outputFmt"] = "html"
 	if( args["outputFmt"] == "html" ):
@@ -29,7 +24,6 @@ if 'REQUEST_METHOD' in os.environ:
 else:
 	import argparse
 	parser = argparse.ArgumentParser(description='Query logs by client.')
-	parser.add_argument('--maxLogs', type=int, help='maximum number of logs to fetch', default=100 )
 	parser.add_argument('--startTime', type=int, help='UTC UNIX seconds')
 	parser.add_argument('--stopTime', type=int, help='UTC UNIX seconds')
 	parser.add_argument('--outputFmt',
@@ -45,38 +39,39 @@ cur = conn.cursor()
 cur.execute('pragma query_only = ON')
 
 logs = Table('log_entries')
-q = Query.from_(logs)
+qmin = Query.from_(logs)
+qmax = Query.from_(logs)
 
 def present( args, key ):
 	return key in args and args[key] != None
 
 if present( args, "startTime"):
-	q = q.where(logs.apachelog_request_time_unix >= args["startTime"])
+	qmin = qmin.where(logs.apachelog_request_time_unix >= args["startTime"])
+	qmax = qmax.where(logs.apachelog_request_time_unix >= args["startTime"])
 	
 if present( args, "stopTime"):
-	q = q.where(logs.apachelog_request_time_unix < args["stopTime"])
+	qmin = qmin.where(logs.apachelog_request_time_unix < args["stopTime"])
+	qmax = qmax.where(logs.apachelog_request_time_unix < args["stopTime"])
 
-q = q.select(logs.apachelog_request_time, logs.apachelog_remote_host, logs.apachelog_request_line)
+qmin = qmin.select(fn.Min(logs.apachelog_request_time_unix))
+qmax = qmax.select(fn.Max(logs.apachelog_request_time_unix))
 
-if present( args, "maxLogs"):
-	q = q.limit( args["maxLogs"] )
-
-rslt = cur.execute(str(q)).fetchall()
+rslt_min = cur.execute(str(qmin)).fetchone()
+rslt_max = cur.execute(str(qmax)).fetchone()
 if args["outputFmt"] == 'text' or args["outputFmt"] == 'all':
-	print(rslt)
+	print("oldest log:", rslt_min[0])
+	print("newest log:", rslt_max[0])
 if args["outputFmt"] == 'json' or args["outputFmt"] == 'all':
 	import json
-	print(json.dumps({k:v for k,v in rslt}))
+	print(json.dumps({"oldest":rslt_min[0], "newest":rslt_max[0]}))
 if args["outputFmt"] == 'csv' or args["outputFmt"] == 'all':
 	import csv
-	print('timestamp,remote host,request')
-	for tup in rslt:
-		print( ",".join( [str(t) for t in tup] ) )
+	print('oldest,newest')
+	print(str(rslt_min[0]) + ',' + str(rslt_max[0]) )
 if args["outputFmt"] == 'html' or args["outputFmt"] == 'all':
-	print( "<html><head><title>Logs</title></head><body>" )
+	print( "<html><head><title>Oldest and Newest</title></head><body>" )
 	print( "<table border=\"1\">" )
-	print( "	<tr><th>BaseTime</th><th>Count</th><th>AvgRate</th></tr>")
-	for tup in rslt:
-		print("	<tr><td>" + "</td><td>".join( [ str(t) for t in tup ] ) + "</td></tr>")
+	print( "	<tr><th>Oldest</th><th>Newest</th></tr>")
+	print( "	<tr><td>" + str(rslt_min[0]) + "</td><td>" + str(rslt_max[0]) + "</td></tr>")
 	print( "</table>" )
 	print( "</body></html>" )
