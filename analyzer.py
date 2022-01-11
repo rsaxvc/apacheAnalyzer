@@ -43,15 +43,11 @@ if conn is not None:
 
 	cur.execute("""CREATE UNIQUE INDEX IF NOT EXISTS log_entries_idx_unique on log_entries(apachelog_request_time_unix,apachelog_line,apachelog_remote_host,COALESCE(apachelog_request_line,''))""")
 
-
 	cur.execute("""CREATE INDEX IF NOT EXISTS log_entries_idx_remote_host ON
 					log_entries(apachelog_remote_host);""")
 
 	cur.execute("""CREATE INDEX IF NOT EXISTS log_entries_idx_geoip_full ON
 					log_entries(geoip_full);""")
-
-	cur.execute("""CREATE INDEX IF NOT EXISTS log_entries_idx_geoip_country_city ON
-					log_entries(geoip_country, geoip_city);""")
 
 def do_geoip( remote_host ):
 	if remote_host in geoip_cache:
