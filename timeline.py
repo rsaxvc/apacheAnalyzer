@@ -53,8 +53,9 @@ if not present( args, "chunkSeconds" ):
 	args["chunkSeconds"] = 60*60
 
 q = q.groupby(logs.apachelog_request_time_unix/args["chunkSeconds"])
-q = q.select(fn.Cast(logs.apachelog_request_time_unix - logs.apachelog_request_time_unix % args["chunkSeconds"], 'INTEGER'), fn.Count(logs.apachelog_request_time_unix))
-	
+#q = q.select(fn.Cast(logs.apachelog_request_time_unix - logs.apachelog_request_time_unix % args["chunkSeconds"], 'INTEGER'), fn.Count(logs.apachelog_request_time_unix))
+q = q.select(logs.apachelog_request_time_unix / args["chunkSeconds"] * args["chunkSeconds"], fn.Count(logs.apachelog_request_time_unix))
+
 if present( args, "maxChunks"):
 	q = q.limit(args.maxChunks)
 
