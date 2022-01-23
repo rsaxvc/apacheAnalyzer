@@ -75,7 +75,7 @@ if args["outputFmt"] == 'csv' or args["outputFmt"] == 'all':
 if args["outputFmt"] == 'html' or args["outputFmt"] == 'all':
 	print( "<html><head><title>Logs</title></head><body>" )
 	print( "<table border=\"1\">" )
-	print( "	<tr><th>BaseTime</th><th>Count</th><th>AvgRate</th></tr>")
+	print( "	<tr><th>BaseTime</th><th>Remotehost</th><th>LogEntry</th></tr>")
 	for tup in rslt:
 		print("	<tr><td>" + "</td><td>".join( [ str(t) for t in tup ] ) + "</td></tr>")
 	print( "</table>" )
