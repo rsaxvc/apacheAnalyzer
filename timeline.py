@@ -8,15 +8,18 @@ import sys
 
 if 'REQUEST_METHOD' in os.environ:
 	import cgi
-	args = dict(cgi.FieldStorage())
+	args = dict()
+	form = cgi.FieldStorage()
+	for field in form.keys():
+		args[field] = form.getfirst(field)
 	if "outputFmt" not in args:
 		args["outputFmt"] = "html"
 	if( args["outputFmt"] == "html" ):
-		print( "Content-type: text/html\n\n" )
+		print( "Content-type: text/html" )
 	elif( args["outputFmt"] == "json" ):
-		print( "Content-type: application/json\n\n" )
+		print( "Content-type: application/json" )
 	else:
-		print( "Content-type: text/plain\n\n" )
+		print( "Content-type: text/plain" )
 	print()
 else:
 	import argparse

@@ -10,15 +10,18 @@ from timeit import default_timer as timer
 if 'REQUEST_METHOD' in os.environ:
 	import cgi
 	import cgitb
-	args =dict( cgi.FieldStorage())
+	args = dict()
+	form = cgi.FieldStorage()
+	for field in form.keys():
+		args[field] = form.getfirst(field)
 	if "outputFmt" not in args:
 		args["outputFmt"] = "html"
 	if( args["outputFmt"] == "html" ):
-		print( "Content-type: text/html\n\n" )
+		print( "Content-type: text/html" )
 	elif( args["outputFmt"] == "json" ):
-		print( "Content-type: application/json\n\n" )
+		print( "Content-type: application/json" )
 	else:
-		print( "Content-type: text/plain\n\n" )
+		print( "Content-type: text/plain" )
 	print()
 	cgitb.enable()
 else:
@@ -48,7 +51,7 @@ def present( args, key ):
 if present( args, "startTime"):
 	qmin = qmin.where(logs.apachelog_request_time_unix >= args["startTime"])
 	qmax = qmax.where(logs.apachelog_request_time_unix >= args["startTime"])
-	
+
 if present( args, "stopTime"):
 	qmin = qmin.where(logs.apachelog_request_time_unix < args["stopTime"])
 	qmax = qmax.where(logs.apachelog_request_time_unix < args["stopTime"])
