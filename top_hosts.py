@@ -50,6 +50,12 @@ p = []
 def present( args, key ):
 	return key in args and args[key] != None
 
+if not present( args, "minRequestsPerHost"):
+	args["minRequestsPerHost"] = 20
+
+if not present( args, "maxHosts"):
+	args["maxHosts"] = 10
+
 if present( args, "startTime"):
 	q = q.where(logs.apachelog_request_time_unix >= Parameter('?'))
 	p.append( args["startTime"] )
