@@ -76,7 +76,7 @@ if args["outputFmt"] == 'text' or args["outputFmt"] == 'all':
 	print(rslt)
 if args["outputFmt"] == 'json' or args["outputFmt"] == 'all':
 	import json
-	print(json.dumps({k:v for k,v in rslt}))
+	print(json.dumps(rslt))
 if args["outputFmt"] == 'csv' or args["outputFmt"] == 'all':
 	import csv
 	print('timestamp,remote host,request')
