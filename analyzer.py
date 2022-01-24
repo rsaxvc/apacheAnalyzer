@@ -2,6 +2,7 @@
 from apachelogs import LogParser
 import apachelogs
 import argparse
+import gzip
 from timeit import default_timer as timer
 import traceback
 import os
@@ -68,12 +69,21 @@ def do_geoip( remote_host ):
 			geoip_cache[remote_host] = location
 			return location
 
+def autoGzOpen( filename ):
+	r = open( filename, 'rb' )
+	magic2 = r.read(2)
+	r.close()
+	if magic2 == b'\x1f\x8b':
+		return gzip.open( filename, 'rt', encoding='utf8' )
+	else:
+		return open( filename )
+
 def autoparse( filename ):
 	logFormats=[
 		"%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"", #Combined
 		"%h %l %u %t \"%r\" %>s %b" #common
 		]
-	with open(filename) as fp:
+	with autoGzOpen(filename) as fp:
 		for lf in logFormats:
 			try:
 				entries=[]
@@ -93,7 +103,7 @@ def autoparse( filename ):
 					if "apachelog_request_time" in entry:
 						entry["apachelog_request_time_unix"] = datetime.datetime.timestamp(entry["apachelog_request_time"])
 						entry["apachelog_request_time"] = entry["apachelog_request_time"].isoformat()
-						
+
 					if "apachelog_headers_in" in entry:
 						entry["apachelog_headers_referer"] = entry["apachelog_headers_in"]["Referer"]
 						entry["apachelog_headers_useragent"] = entry["apachelog_headers_in"]["User-Agent"]
@@ -112,16 +122,16 @@ def autoparse( filename ):
 			except apachelogs.errors.InvalidEntryError:
 				continue
 		return 0
-	
+
 starting_log_entries = cur.execute("SELECT COUNT(*) FROM log_entries").fetchone()[0]
 
 count = 0
 start = timer()
 for path in args.log_paths:
-	if os.path.isdir(path):  
+	if os.path.isdir(path):
 		for filename in os.scandir(path):
 			count += autoparse( filename )
-	elif os.path.isfile(path):  
+	elif os.path.isfile(path):
 		count += autoparse( path )
 	else:
 		print("abnormal path:"+path)
