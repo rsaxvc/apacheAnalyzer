@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+import html
 import os
 from pypika import functions as fn
 from pypika import Query, Table, Field, Order, Parameter
@@ -86,6 +87,6 @@ if args["outputFmt"] == 'html' or args["outputFmt"] == 'all':
 	print( "<table border=\"1\">" )
 	print( "	<tr><th>BaseTime</th><th>Remotehost</th><th>LogEntry</th></tr>")
 	for tup in rslt:
-		print("	<tr><td>" + "</td><td>".join( [ str(t) for t in tup ] ) + "</td></tr>")
+		print("	<tr><td>" + "</td><td>".join( [ html.escape(str(t)) for t in tup ] ) + "</td></tr>")
 	print( "</table>" )
 	print( "</body></html>" )
