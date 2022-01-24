@@ -62,9 +62,9 @@ if present( args, "stopTime"):
 	q = q.where(logs.apachelog_request_time_unix < Parameter('?') )
 	p.append( args["stopTime"] )
 
-q = q.select(logs.apachelog_request_time, logs.apachelog_remote_host, logs.apachelog_request_line)
+q = q.select(logs.apachelog_request_time_unix, logs.apachelog_remote_host, logs.apachelog_request_line)
 
-q = q.orderby(logs.apachelog_request_time, order=Order.desc)
+q = q.orderby(logs.apachelog_request_time_unix, order=Order.desc)
 
 if present( args, "maxLogs"):
 	q = q.limit( Parameter('?') )
