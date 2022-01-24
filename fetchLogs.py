@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import os
 from pypika import functions as fn
-from pypika import Query, Table, Field
+from pypika import Query, Table, Field, Order
 import pypika
 import sqlite3
 import sys
@@ -57,6 +57,8 @@ if present( args, "stopTime"):
 	q = q.where(logs.apachelog_request_time_unix < args["stopTime"])
 
 q = q.select(logs.apachelog_request_time, logs.apachelog_remote_host, logs.apachelog_request_line)
+
+q = q.orderby(logs.apachelog_request_time, order=Order.desc)
 
 if present( args, "maxLogs"):
 	q = q.limit( args["maxLogs"] )
