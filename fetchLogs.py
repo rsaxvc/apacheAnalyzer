@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import os
 from pypika import functions as fn
-from pypika import Query, Table, Field, Order
+from pypika import Query, Table, Field, Order, Parameter
 import pypika
 import sqlite3
 import sys
@@ -49,24 +49,28 @@ cur.execute('pragma query_only = ON')
 
 logs = Table('log_entries')
 q = Query.from_(logs)
+p = []
 
 def present( args, key ):
 	return key in args and args[key] != None
 
 if present( args, "startTime"):
-	q = q.where(logs.apachelog_request_time_unix >= args["startTime"])
-	
+	q = q.where(logs.apachelog_request_time_unix >= Parameter('?') )
+	p.append( args["startTime"] )
+
 if present( args, "stopTime"):
-	q = q.where(logs.apachelog_request_time_unix < args["stopTime"])
+	q = q.where(logs.apachelog_request_time_unix < Parameter('?') )
+	p.append( args["stopTime"] )
 
 q = q.select(logs.apachelog_request_time, logs.apachelog_remote_host, logs.apachelog_request_line)
 
 q = q.orderby(logs.apachelog_request_time, order=Order.desc)
 
 if present( args, "maxLogs"):
-	q = q.limit( args["maxLogs"] )
+	q = q.limit( Parameter('?') )
+	p.append( args["maxLogs"] )
 
-rslt = cur.execute(str(q)).fetchall()
+rslt = cur.execute(str(q),p).fetchall()
 if args["outputFmt"] == 'text' or args["outputFmt"] == 'all':
 	print(rslt)
 if args["outputFmt"] == 'json' or args["outputFmt"] == 'all':

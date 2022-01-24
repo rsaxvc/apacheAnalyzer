@@ -6,7 +6,7 @@ import sys
 
 from timeit import default_timer as timer
 from pypika import functions as fn
-from pypika import Query, Table, Field, Order
+from pypika import Query, Table, Field, Order, Parameter
 
 if 'REQUEST_METHOD' in os.environ:
 	import cgi
@@ -46,28 +46,32 @@ cur.execute('pragma query_only = ON')
 
 logs = Table('log_entries')
 q = Query.from_(logs)
-
+p = []
 def present( args, key ):
 	return key in args and args[key] != None
 
 if present( args, "startTime"):
-	q = q.where(logs.apachelog_request_time_unix >= args["startTime"])
-	
+	q = q.where(logs.apachelog_request_time_unix >= Parameter('?'))
+	p.append( args["startTime"] )
+
 if present( args, "stopTime"):
-	q = q.where(logs.apachelog_request_time_unix < args["stopTime"])
+	q = q.where(logs.apachelog_request_time_unix < Parameter('?'))
+	p.append( args["startTime"] )
 
 q = q.groupby(logs.apachelog_remote_host) \
 	.select(logs.apachelog_remote_host, fn.Count(logs.apachelog_remote_host).as_('RequestsPerHost') )
 
 if present( args, "minRequestsPerHost"):
-	q = q.having(fn.Count(logs["apachelog_remote_host"]) >= args["minRequestsPerHost"] )
+	q = q.having(fn.Count(logs["apachelog_remote_host"]) >= Parameter('?') )
+	p.append( args["minRequestsPerHost"] )
 
 q = q.orderby('RequestsPerHost', order=Order.desc)
 
 if present( args, "maxHosts"):
-	q = q.limit( args["maxHosts"] )
+	q = q.limit( Parameter('?') )
+	p.append( args["maxHosts"] )
 
-rslt = cur.execute(str(q)).fetchall()
+rslt = cur.execute(str(q), p).fetchall()
 if args["outputFmt"] == 'python' or args["outputFmt"] == 'all':
 	print(rslt)
 if args["outputFmt"] == 'json' or args["outputFmt"] == 'all':

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import os
 from pypika import functions as fn
-from pypika import Query, Table, Field
+from pypika import Query, Table, Field, Parameter
 import pypika
 import sqlite3
 import sys
@@ -43,24 +43,30 @@ cur.execute('pragma query_only = ON')
 
 logs = Table('log_entries')
 qmin = Query.from_(logs)
+pmin = []
 qmax = Query.from_(logs)
+pmax = []
 
 def present( args, key ):
 	return key in args and args[key] != None
 
 if present( args, "startTime"):
-	qmin = qmin.where(logs.apachelog_request_time_unix >= args["startTime"])
-	qmax = qmax.where(logs.apachelog_request_time_unix >= args["startTime"])
+	qmin = qmin.where(logs.apachelog_request_time_unix >= Parameter('?'))
+	qmax = qmax.where(logs.apachelog_request_time_unix >= Parameter('?'))
+	pmin.append( args["startTime"] )
+	pmax.append( args["startTime"] )
 
 if present( args, "stopTime"):
-	qmin = qmin.where(logs.apachelog_request_time_unix < args["stopTime"])
-	qmax = qmax.where(logs.apachelog_request_time_unix < args["stopTime"])
+	qmin = qmin.where(logs.apachelog_request_time_unix < Parameter('?'))
+	qmax = qmax.where(logs.apachelog_request_time_unix < Parameter('?'))
+	pmin.append( args["stopTime"] )
+	pmax.append( args["stopTime"] )
 
 qmin = qmin.select(fn.Min(logs.apachelog_request_time_unix))
 qmax = qmax.select(fn.Max(logs.apachelog_request_time_unix))
 
-rslt_min = cur.execute(str(qmin)).fetchone()
-rslt_max = cur.execute(str(qmax)).fetchone()
+rslt_min = cur.execute(str(qmin), pmin).fetchone()
+rslt_max = cur.execute(str(qmax), pmax).fetchone()
 if args["outputFmt"] == 'text' or args["outputFmt"] == 'all':
 	print("oldest log:", rslt_min[0])
 	print("newest log:", rslt_max[0])

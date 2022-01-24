@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import os
 from pypika import functions as fn
-from pypika import Query, Table, Field
+from pypika import Query, Table, Field, Parameter
 import pypika
 import sqlite3
 import sys
@@ -42,27 +42,32 @@ cur.execute('pragma query_only = ON')
 
 logs = Table('log_entries')
 q = Query.from_(logs)
+p = []
 
 def present( args, key ):
 	return key in args and args[key] != None
 
 if present( args, "startTime"):
-	q = q.where(logs.apachelog_request_time_unix >= args["startTime"])
-	
+	q = q.where(logs.apachelog_request_time_unix >= Parameter('?'))
+	p.append( args["startTime"] )
+
 if present( args, "stopTime"):
-	q = q.where(logs.apachelog_request_time_unix < args["stopTime"])
+	q = q.where(logs.apachelog_request_time_unix < Parameter('?'))
+	p.append( args["stopTime"] )
 
 if not present( args, "chunkSeconds" ):
 	args["chunkSeconds"] = 60*60
 
-q = q.groupby(logs.apachelog_request_time_unix/args["chunkSeconds"])
-#q = q.select(fn.Cast(logs.apachelog_request_time_unix - logs.apachelog_request_time_unix % args["chunkSeconds"], 'INTEGER'), fn.Count(logs.apachelog_request_time_unix))
-q = q.select(logs.apachelog_request_time_unix / args["chunkSeconds"] * args["chunkSeconds"], fn.Count(logs.apachelog_request_time_unix))
+q = q.groupby(logs.apachelog_request_time_unix / Parameter('?'))
+p.append(args["chunkSeconds"])
+q = q.select(logs.apachelog_request_time_unix / Parameter('?') * Parameter('?'), fn.Count(logs.apachelog_request_time_unix))
+p.append(args["chunkSeconds"])
+p.append(args["chunkSeconds"])
 
 if present( args, "maxChunks"):
 	q = q.limit(args.maxChunks)
 
-rslt = cur.execute(str(q)).fetchall()
+rslt = cur.execute(str(q), p).fetchall()
 if args["outputFmt"] == 'python' or args["outputFmt"] == 'all':
 	print(rslt)
 if args["outputFmt"] == 'json' or args["outputFmt"] == 'all':
