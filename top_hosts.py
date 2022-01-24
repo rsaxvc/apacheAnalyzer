@@ -64,7 +64,7 @@ if present( args, "stopTime"):
 	p.append( args["startTime"] )
 
 q = q.groupby(logs.apachelog_remote_host) \
-	.select(logs.apachelog_remote_host, fn.Count(logs.apachelog_remote_host).as_('RequestsPerHost') )
+	.select(logs.apachelog_remote_host, fn.Count(logs.apachelog_remote_host).as_('RequestsPerHost'), logs.geoip_full )
 
 if present( args, "minRequestsPerHost"):
 	q = q.having(fn.Count(logs["apachelog_remote_host"]) >= Parameter('?') )
@@ -81,7 +81,7 @@ if args["outputFmt"] == 'python' or args["outputFmt"] == 'all':
 	print(rslt)
 if args["outputFmt"] == 'json' or args["outputFmt"] == 'all':
 	import json
-	print(json.dumps({k:v for k,v in rslt}))
+	print(json.dumps(rslt))
 if args["outputFmt"] == 'csv' or args["outputFmt"] == 'all':
 	print('client,count')
 	for tup in rslt:
@@ -89,8 +89,8 @@ if args["outputFmt"] == 'csv' or args["outputFmt"] == 'all':
 if args["outputFmt"] == 'html' or args["outputFmt"] == 'all':
 	print( "<html><head><title>Top Hosts</title></head><body>" )
 	print( "<table border=\"1\">" )
-	print( "	<tr><th>RemoteHost</th><th>Count</th></tr>")
+	print( "	<tr><th>RemoteHost</th><th>Count</th><th>GeoIp</th></tr>")
 	for tup in rslt:
-		print("	<tr><td>"+str(tup[0]) + "</td><td>"+ str(tup[1])+"</td></tr>")
+		print("	<tr><td>"+"</td><td>".join([str(t) for t in tup]) +"</td></tr>")
 	print( "</table>" )
 	print( "</body></html>" )

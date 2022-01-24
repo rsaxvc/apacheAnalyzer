@@ -33,6 +33,8 @@ else:
 	import argparse
 	parser = argparse.ArgumentParser(description='Query logs by client.')
 	parser.add_argument('--maxLogs', type=int, help='maximum number of logs to fetch', default=100 )
+	parser.add_argument('--startsWith', type=str, help='Log request starts with')
+	parser.add_argument('--contains', type=str, help='Log request contains')
 	parser.add_argument('--startTime', type=int, help='UTC UNIX seconds')
 	parser.add_argument('--stopTime', type=int, help='UTC UNIX seconds')
 	parser.add_argument('--outputFmt',
@@ -62,7 +64,19 @@ if present( args, "stopTime"):
 	q = q.where(logs.apachelog_request_time_unix < Parameter('?') )
 	p.append( args["stopTime"] )
 
-q = q.select(logs.apachelog_request_time_unix, logs.apachelog_remote_host, logs.apachelog_request_line)
+if present( args, "startsWith"):
+	q = q.where(logs.apachelog_request_time_unix < Parameter('?') )
+	p.append( args["stopTime"] )
+
+if present( args, "startsWith"):
+	q = q.where(logs.apachelog_request_line.like(Parameter('?')))
+	p.append( args["startsWith"] +'%' )
+
+if present( args, "contains"):
+	q = q.where(logs.apachelog_request_line.like(Parameter('?')))
+	p.append( '%' + args["contains"] + '%')
+
+q = q.select(logs.apachelog_request_time_unix, logs.apachelog_remote_host, logs.geoip_full, logs.apachelog_request_line)
 
 q = q.orderby(logs.apachelog_request_time_unix, order=Order.desc)
 
@@ -78,13 +92,13 @@ if args["outputFmt"] == 'json' or args["outputFmt"] == 'all':
 	print(json.dumps(rslt))
 if args["outputFmt"] == 'csv' or args["outputFmt"] == 'all':
 	import csv
-	print('timestamp,remote host,request')
+	print('timestamp,remote host,geoip,request')
 	for tup in rslt:
 		print( ",".join( [str(t) for t in tup] ) )
 if args["outputFmt"] == 'html' or args["outputFmt"] == 'all':
 	print( "<html><head><title>Logs</title></head><body>" )
 	print( "<table border=\"1\">" )
-	print( "	<tr><th>BaseTime</th><th>Remotehost</th><th>LogEntry</th></tr>")
+	print( "	<tr><th>BaseTime</th><th>Remotehost</th><th>GeoIp</th><th>LogEntry</th></tr>")
 	for tup in rslt:
 		print("	<tr><td>" + "</td><td>".join( [ html.escape(str(t)) for t in tup ] ) + "</td></tr>")
 	print( "</table>" )
