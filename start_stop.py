@@ -5,7 +5,6 @@ from pypika import Query, Table, Field, Parameter
 import pypika
 import sqlite3
 import sys
-from timeit import default_timer as timer
 
 if 'REQUEST_METHOD' in os.environ:
 	import cgi

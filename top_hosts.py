@@ -4,7 +4,6 @@ import pypika
 import sqlite3
 import sys
 
-from timeit import default_timer as timer
 from pypika import functions as fn
 from pypika import Query, Table, Field, Order, Parameter
 

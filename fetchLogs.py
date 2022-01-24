@@ -6,7 +6,6 @@ from pypika import Query, Table, Field, Order, Parameter
 import pypika
 import sqlite3
 import sys
-from timeit import default_timer as timer
 
 sys.stdout.reconfigure(encoding='utf-8')
 
