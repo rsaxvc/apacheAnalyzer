@@ -14,14 +14,18 @@ parser.add_argument('log_paths', type=str, nargs='+',
                     help='path to files or directories')
 args = parser.parse_args()
 
-has_geoip = False
+GEODB = 'GeoLite2-City.mmdb'
+
+georeader = None
 try:
 	import geoip2.database
-	has_geoip = True
+	try:
+		georeader = geoip2.database.Reader(GEODB)
+	except:
+		print("Warning! Unable to find: "+GEODB+", geoip resolution will be disabled")
 except:
-	pass
+	print("Warning! Unable to load geoip2 module, geoip resolution will be disabled")
 
-reader = geoip2.database.Reader('GeoLite2-City.mmdb')
 geoip_cache = dict()
 conn = sqlite3.connect("logdb.db")
 cur = conn.cursor()
@@ -52,12 +56,14 @@ if conn is not None:
 					log_entries(geoip_full);""")
 
 def do_geoip( remote_host ):
-	if remote_host in geoip_cache:
+	if georeader is None:
+		return (None,None,None)
+	elif remote_host in geoip_cache:
 		return geoip_cache[remote_host]
 	else:
 		location = (None,None,None)
 		try:
-			lookup = reader.city(remote_host)
+			lookup = georeader.city(remote_host)
 			full = [ str(lookup.country.name) ]
 			for subdivision in lookup.subdivisions:
 				full.append( str(subdivision.name) )
