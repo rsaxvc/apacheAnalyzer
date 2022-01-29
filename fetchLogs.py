@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+from collections.abc import Iterable
 import html
 import os
 from pypika import functions as fn
@@ -35,6 +36,8 @@ else:
 	parser.add_argument('--maxLogs', type=int, help='maximum number of logs to fetch', default=100 )
 	parser.add_argument('--startsWith', type=str, help='Log request starts with')
 	parser.add_argument('--contains', type=str, help='Log request contains')
+	parser.add_argument('--remoteHost', type=str, action='append', help='Filter by remote IP addresses')
+	parser.add_argument('--notRemoteHost', type=str, action='append', help='Filter by not remote IP addresses')
 	parser.add_argument('--startTime', type=int, help='UTC UNIX seconds')
 	parser.add_argument('--stopTime', type=int, help='UTC UNIX seconds')
 	parser.add_argument('--outputFmt',
@@ -56,15 +59,27 @@ p = []
 def present( args, key ):
 	return key in args and args[key] != None
 
+if present( args, "remoteHost"):
+	if isinstance( args["remoteHost"], str) or not isinstance( args["remoteHost"], Iterable ):
+		a = [args["remoteHost"]]
+	else:
+		a = list(args["remoteHost"])
+	q = q.where(logs.apachelog_remote_host.isin([Parameter('?')] *len(a)))
+	p.extend( a )
+
+if present( args, "notRemoteHost"):
+	if isinstance( args["notRemoteHost"], str) or not isinstance( args["notRemoteHost"], Iterable ):
+		a = [args["notRemoteHost"]]
+	else:
+		a = list(args["notRemoteHost"])
+	q = q.where(logs.apachelog_remote_host.notin([Parameter('?')] *len(a)))
+	p.extend( a )
+
 if present( args, "startTime"):
 	q = q.where(logs.apachelog_request_time_unix >= Parameter('?') )
 	p.append( args["startTime"] )
 
 if present( args, "stopTime"):
-	q = q.where(logs.apachelog_request_time_unix < Parameter('?') )
-	p.append( args["stopTime"] )
-
-if present( args, "startsWith"):
 	q = q.where(logs.apachelog_request_time_unix < Parameter('?') )
 	p.append( args["stopTime"] )
 

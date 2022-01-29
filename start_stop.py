@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+from collections.abc import Iterable
 import os
 from pypika import functions as fn
 from pypika import Query, Table, Field, Parameter
@@ -26,6 +27,8 @@ if 'REQUEST_METHOD' in os.environ:
 else:
 	import argparse
 	parser = argparse.ArgumentParser(description='Query logs by client.')
+	parser.add_argument('--remoteHost', type=str, action='append', help='Filter by remote IP addresses')
+	parser.add_argument('--notRemoteHost', type=str, action='append', help='Filter by not remote IP addresses')
 	parser.add_argument('--startTime', type=int, help='UTC UNIX seconds')
 	parser.add_argument('--stopTime', type=int, help='UTC UNIX seconds')
 	parser.add_argument('--outputFmt',
@@ -60,6 +63,26 @@ if present( args, "stopTime"):
 	qmax = qmax.where(logs.apachelog_request_time_unix < Parameter('?'))
 	pmin.append( args["stopTime"] )
 	pmax.append( args["stopTime"] )
+
+if present( args, "remoteHost"):
+	if isinstance( args["remoteHost"], str) or not isinstance( args["remoteHost"], Iterable ):
+		a = [args["remoteHost"]]
+	else:
+		a = list(args["remoteHost"])
+	qmin = qmin.where(logs.apachelog_remote_host.isin([Parameter('?')] *len(a)))
+	qmax = qmax.where(logs.apachelog_remote_host.isin([Parameter('?')] *len(a)))
+	pmin.extend( a )
+	pmax.extend( a )
+
+if present( args, "notRemoteHost"):
+	if isinstance( args["notRemoteHost"], str) or not isinstance( args["notRemoteHost"], Iterable ):
+		a = [args["notRemoteHost"]]
+	else:
+		a = list(args["notRemoteHost"])
+	qmin = qmin.where(logs.apachelog_remote_host.notin([Parameter('?')] *len(a)))
+	qmax = qmax.where(logs.apachelog_remote_host.notin([Parameter('?')] *len(a)))
+	pmin.extend( a )
+	pmax.extend( a )
 
 qmin = qmin.select(fn.Min(logs.apachelog_request_time_unix))
 qmax = qmax.select(fn.Max(logs.apachelog_request_time_unix))

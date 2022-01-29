@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+from collections.abc import Iterable
 import os
 from pypika import functions as fn
 from pypika import Query, Table, Field, Parameter
@@ -25,6 +26,8 @@ else:
 	import argparse
 	parser = argparse.ArgumentParser(description='Query logs into a count per chunk over time.')
 	parser.add_argument('--chunkSeconds', type=int, help='seconds per chunk', default=60*60)
+	parser.add_argument('--remoteHost', type=str, action='append', help='Filter by remote IP addresses')
+	parser.add_argument('--notRemoteHost', type=str, action='append', help='Filter by not remote IP addresses')
 	parser.add_argument('--startTime', type=int, help='UTC UNIX seconds')
 	parser.add_argument('--stopTime', type=int, help='UTC UNIX seconds')
 	parser.add_argument('--outputFmt',
@@ -47,6 +50,22 @@ p = []
 def present( args, key ):
 	return key in args and args[key] != None
 
+if present( args, "remoteHost"):
+	if isinstance( args["remoteHost"], str) or not isinstance( args["remoteHost"], Iterable ):
+		a = [args["remoteHost"]]
+	else:
+		a = list(args["remoteHost"])
+	q = q.where(logs.apachelog_remote_host.isin([Parameter('?')] *len(a)))
+	p.extend( a )
+
+if present( args, "notRemoteHost"):
+	if isinstance( args["notRemoteHost"], str) or not isinstance( args["notRemoteHost"], Iterable ):
+		a = [args["notRemoteHost"]]
+	else:
+		a = list(args["notRemoteHost"])
+	q = q.where(logs.apachelog_remote_host.notin([Parameter('?')] *len(a)))
+	p.extend( a )
+
 if present( args, "startTime"):
 	q = q.where(logs.apachelog_request_time_unix >= Parameter('?'))
 	p.append( args["startTime"] )
@@ -61,8 +80,8 @@ if not present( args, "chunkSeconds" ):
 q = q.groupby(logs.apachelog_request_time_unix / Parameter('?'))
 p.append(args["chunkSeconds"])
 q = q.select(logs.apachelog_request_time_unix / Parameter('?') * Parameter('?'), fn.Count(logs.apachelog_request_time_unix))
-p.append(args["chunkSeconds"])
-p.append(args["chunkSeconds"])
+p.insert(0, args["chunkSeconds"])
+p.insert(0, args["chunkSeconds"])
 
 if present( args, "maxChunks"):
 	q = q.limit(args.maxChunks)
