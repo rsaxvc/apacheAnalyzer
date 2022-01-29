@@ -53,18 +53,6 @@ pmax = []
 def present( args, key ):
 	return key in args and args[key] != None
 
-if present( args, "startTime"):
-	qmin = qmin.where(logs.apachelog_request_time_unix >= Parameter('?'))
-	qmax = qmax.where(logs.apachelog_request_time_unix >= Parameter('?'))
-	pmin.append( args["startTime"] )
-	pmax.append( args["startTime"] )
-
-if present( args, "stopTime"):
-	qmin = qmin.where(logs.apachelog_request_time_unix < Parameter('?'))
-	qmax = qmax.where(logs.apachelog_request_time_unix < Parameter('?'))
-	pmin.append( args["stopTime"] )
-	pmax.append( args["stopTime"] )
-
 if present( args, "remoteHost"):
 	if isinstance( args["remoteHost"], str) or not isinstance( args["remoteHost"], Iterable ):
 		a = [args["remoteHost"]]
@@ -84,6 +72,18 @@ if present( args, "notRemoteHost"):
 	qmax = qmax.where(logs.apachelog_remote_host.notin([Parameter('?')] *len(a)))
 	pmin.extend( a )
 	pmax.extend( a )
+
+if present( args, "startTime"):
+	qmin = qmin.where(logs.apachelog_request_time_unix >= Parameter('?'))
+	qmax = qmax.where(logs.apachelog_request_time_unix >= Parameter('?'))
+	pmin.append( args["startTime"] )
+	pmax.append( args["startTime"] )
+
+if present( args, "stopTime"):
+	qmin = qmin.where(logs.apachelog_request_time_unix < Parameter('?'))
+	qmax = qmax.where(logs.apachelog_request_time_unix < Parameter('?'))
+	pmin.append( args["stopTime"] )
+	pmax.append( args["stopTime"] )
 
 qmin = qmin.select(fn.Min(logs.apachelog_request_time_unix))
 qmax = qmax.select(fn.Max(logs.apachelog_request_time_unix))

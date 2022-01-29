@@ -33,10 +33,10 @@ if 'REQUEST_METHOD' in os.environ:
 else:
 	import argparse
 	parser = argparse.ArgumentParser(description='Query logs by client.')
+	parser.add_argument('--contains', type=str, help='Log request contains')
 	parser.add_argument('--dumpSql', action='store_true')
 	parser.add_argument('--maxLogs', type=int, help='maximum number of logs to fetch', default=100 )
 	parser.add_argument('--startsWith', type=str, help='Log request starts with')
-	parser.add_argument('--contains', type=str, help='Log request contains')
 	parser.add_argument('--remoteHost', type=str, action='append', help='Filter by remote IP addresses')
 	parser.add_argument('--notRemoteHost', type=str, action='append', help='Filter by not remote IP addresses')
 	parser.add_argument('--startTime', type=int, help='UTC UNIX seconds')
@@ -59,6 +59,10 @@ p = []
 
 def present( args, key ):
 	return key in args and args[key] != None
+
+if present( args, "contains"):
+	q = q.where(logs.apachelog_request_line.like(Parameter('?')))
+	p.append( '%' + args["contains"] + '%')
 
 if present( args, "remoteHost"):
 	if isinstance( args["remoteHost"], str) or not isinstance( args["remoteHost"], Iterable ):
@@ -87,10 +91,6 @@ if present( args, "stopTime"):
 if present( args, "startsWith"):
 	q = q.where(logs.apachelog_request_line.like(Parameter('?')))
 	p.append( args["startsWith"] +'%' )
-
-if present( args, "contains"):
-	q = q.where(logs.apachelog_request_line.like(Parameter('?')))
-	p.append( '%' + args["contains"] + '%')
 
 q = q.select(logs.apachelog_request_time_unix, logs.apachelog_remote_host, logs.geoip_full, logs.apachelog_request_line)
 

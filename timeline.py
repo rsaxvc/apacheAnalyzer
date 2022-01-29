@@ -51,6 +51,9 @@ p = []
 def present( args, key ):
 	return key in args and args[key] != None
 
+if not present( args, "chunkSeconds" ):
+	args["chunkSeconds"] = 60*60
+
 if present( args, "remoteHost"):
 	if isinstance( args["remoteHost"], str) or not isinstance( args["remoteHost"], Iterable ):
 		a = [args["remoteHost"]]
@@ -74,9 +77,6 @@ if present( args, "startTime"):
 if present( args, "stopTime"):
 	q = q.where(logs.apachelog_request_time_unix < Parameter('?'))
 	p.append( args["stopTime"] )
-
-if not present( args, "chunkSeconds" ):
-	args["chunkSeconds"] = 60*60
 
 q = q.groupby(logs.apachelog_request_time_unix / Parameter('?'))
 p.append(args["chunkSeconds"])

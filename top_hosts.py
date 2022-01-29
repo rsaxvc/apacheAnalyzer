@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+from collections.abc import Iterable
 import os
 import pypika
 import sqlite3
@@ -28,10 +29,11 @@ else:
 	import argparse
 	parser = argparse.ArgumentParser(description='Query logs by client.')
 	parser.add_argument('--dumpSql', action='store_true')
+	parser.add_argument('--maxHosts', type=int, help='Fetch only top N hosts by request count', default=10 )
+	parser.add_argument('--minRequestsPerHost', type=int, help='hide hosts with fewer requests', default=20 )
+	parser.add_argument('--notRemoteHost', type=str, action='append', help='Filter by not remote IP addresses')
 	parser.add_argument('--startTime', type=int, help='UTC UNIX seconds')
 	parser.add_argument('--stopTime', type=int, help='UTC UNIX seconds')
-	parser.add_argument('--minRequestsPerHost', type=int, help='hide hosts with fewer requests', default=20 )
-	parser.add_argument('--maxHosts', type=int, help='Fetch only top N hosts by request count', default=10 )
 	parser.add_argument('--outputFmt',
 						default='python',
 						const='python',
@@ -50,11 +52,19 @@ p = []
 def present( args, key ):
 	return key in args and args[key] != None
 
+if not present( args, "maxHosts"):
+	args["maxHosts"] = 10
+
 if not present( args, "minRequestsPerHost"):
 	args["minRequestsPerHost"] = 20
 
-if not present( args, "maxHosts"):
-	args["maxHosts"] = 10
+if present( args, "notRemoteHost"):
+	if isinstance( args["notRemoteHost"], str) or not isinstance( args["notRemoteHost"], Iterable ):
+		a = [args["notRemoteHost"]]
+	else:
+		a = list(args["notRemoteHost"])
+	q = q.where(logs.apachelog_remote_host.notin([Parameter('?')] *len(a)))
+	p.extend( a )
 
 if present( args, "startTime"):
 	q = q.where(logs.apachelog_request_time_unix >= Parameter('?'))
