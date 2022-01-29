@@ -27,6 +27,7 @@ if 'REQUEST_METHOD' in os.environ:
 else:
 	import argparse
 	parser = argparse.ArgumentParser(description='Query logs by client.')
+	parser.add_argument('--dumpSql', action='store_true')
 	parser.add_argument('--remoteHost', type=str, action='append', help='Filter by remote IP addresses')
 	parser.add_argument('--notRemoteHost', type=str, action='append', help='Filter by not remote IP addresses')
 	parser.add_argument('--startTime', type=int, help='UTC UNIX seconds')
@@ -86,6 +87,12 @@ if present( args, "notRemoteHost"):
 
 qmin = qmin.select(fn.Min(logs.apachelog_request_time_unix))
 qmax = qmax.select(fn.Max(logs.apachelog_request_time_unix))
+
+if present( args, "dumpSql" ) and args["dumpSql"]:
+	print(qmin)
+	print(pmin)
+	print(qmax)
+	print(pmax)
 
 rslt_min = cur.execute(str(qmin), pmin).fetchone()
 rslt_max = cur.execute(str(qmax), pmax).fetchone()

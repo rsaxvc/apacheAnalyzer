@@ -26,6 +26,7 @@ else:
 	import argparse
 	parser = argparse.ArgumentParser(description='Query logs into a count per chunk over time.')
 	parser.add_argument('--chunkSeconds', type=int, help='seconds per chunk', default=60*60)
+	parser.add_argument('--dumpSql', action='store_true')
 	parser.add_argument('--remoteHost', type=str, action='append', help='Filter by remote IP addresses')
 	parser.add_argument('--notRemoteHost', type=str, action='append', help='Filter by not remote IP addresses')
 	parser.add_argument('--startTime', type=int, help='UTC UNIX seconds')
@@ -85,6 +86,10 @@ p.insert(0, args["chunkSeconds"])
 
 if present( args, "maxChunks"):
 	q = q.limit(args.maxChunks)
+
+if present( args, "dumpSql" ) and args["dumpSql"]:
+	print(q)
+	print(p)
 
 rslt = cur.execute(str(q), p).fetchall()
 if args["outputFmt"] == 'python' or args["outputFmt"] == 'all':

@@ -33,6 +33,7 @@ if 'REQUEST_METHOD' in os.environ:
 else:
 	import argparse
 	parser = argparse.ArgumentParser(description='Query logs by client.')
+	parser.add_argument('--dumpSql', action='store_true')
 	parser.add_argument('--maxLogs', type=int, help='maximum number of logs to fetch', default=100 )
 	parser.add_argument('--startsWith', type=str, help='Log request starts with')
 	parser.add_argument('--contains', type=str, help='Log request contains')
@@ -99,6 +100,9 @@ if present( args, "maxLogs"):
 	q = q.limit( Parameter('?') )
 	p.append( args["maxLogs"] )
 
+if present( args, "dumpSql" ) and args["dumpSql"]:
+	print(q)
+	print(p)
 rslt = cur.execute(str(q),p).fetchall()
 if args["outputFmt"] == 'text' or args["outputFmt"] == 'all':
 	print(rslt)

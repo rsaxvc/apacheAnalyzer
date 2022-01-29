@@ -27,6 +27,7 @@ if 'REQUEST_METHOD' in os.environ:
 else:
 	import argparse
 	parser = argparse.ArgumentParser(description='Query logs by client.')
+	parser.add_argument('--dumpSql', action='store_true')
 	parser.add_argument('--startTime', type=int, help='UTC UNIX seconds')
 	parser.add_argument('--stopTime', type=int, help='UTC UNIX seconds')
 	parser.add_argument('--minRequestsPerHost', type=int, help='hide hosts with fewer requests', default=20 )
@@ -75,6 +76,10 @@ q = q.orderby('RequestsPerHost', order=Order.desc)
 if present( args, "maxHosts"):
 	q = q.limit( Parameter('?') )
 	p.append( args["maxHosts"] )
+
+if present( args, "dumpSql" ) and args["dumpSql"]:
+	print(q)
+	print(p)
 
 rslt = cur.execute(str(q), p).fetchall()
 if args["outputFmt"] == 'python' or args["outputFmt"] == 'all':
