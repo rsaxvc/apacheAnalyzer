@@ -14,7 +14,10 @@ if 'REQUEST_METHOD' in os.environ:
 	args = dict()
 	form = cgi.FieldStorage()
 	for field in form.keys():
-		args[field] = form.getfirst(field)
+		if field in['remoteHost', 'notRemoteHost']:
+			args[field] = form.getvalue(field)
+		else:
+			args[field] = form.getfirst(field)
 	if "outputFmt" not in args:
 		args["outputFmt"] = "html"
 	if( args["outputFmt"] == "html" ):
